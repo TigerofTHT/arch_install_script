@@ -28,9 +28,9 @@ do
         case $opt in 
             m)
                     echo -e "\nPreparing disk with MBR...\n"
-                    parted -s -a optimal $disk mklabel msdos \ 
-                            mkpart primary linux-swap 0% 128M \ 
-                            mkpart primary ext4 4G 100% print
+                    parted -s -a optimal $disk mklabel msdos \
+                                        mkpart primary linux-swap 0% 128M \
+                                        mkpart primary ext4 4G 100% print
                     mkswap $disk"1"
                     mkfs.ext4 $disk"2"
                     swapon $disk"1"
