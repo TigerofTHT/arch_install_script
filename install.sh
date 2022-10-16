@@ -34,9 +34,10 @@ do
                     mkswap $disk"1"
                     mkfs.ext4 $disk"2"
                     swapon $disk"1"
-                    mount $disk"2" /mount
+                    mount $disk"2" /mnt
                     pacstrap -K /mnt base linux linux-firmware nano syslinux
                     genfstab -U /mnt >> /mnt/etc/fstab
+                    export -f chrootenv
                     arch-chroot /mnt /bin/bash -c chrootenv
                     ;;
         esac 
