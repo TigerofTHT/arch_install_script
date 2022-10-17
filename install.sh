@@ -17,7 +17,7 @@ chrootenv() {
         echo "tiger-arch" >> /etc/hostname
         echo "Generating initramfs..."
         mkinitcpio -P
-        systemctl enable dhscpcd
+        systemctl enable dhcpcd
         passwd
         syslinux-install_update -i -a -m
 }
@@ -36,7 +36,7 @@ do
                     mkfs.ext4 $disk"2"
                     swapon $disk"1"
                     mount $disk"2" /mnt
-                    pacstrap -K /mnt base linux linux-firmware nano syslinux dhcpcd
+                    pacstrap -K /mnt base linux linux-firmware nano dhcpcd syslinux 
                     genfstab -U /mnt >> /mnt/etc/fstab
                     export -f chrootenv
                     arch-chroot /mnt /bin/bash -c chrootenv
