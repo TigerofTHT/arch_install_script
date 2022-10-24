@@ -24,7 +24,7 @@ chrootenv() {
 
 timedatectl status
 
-while getopts "m" opt
+while getopts "m:u" opt
 do
         case $opt in 
                 m)
@@ -52,7 +52,7 @@ do
                         mkfs.ext4 $disk"3"
                         swapon $disk"2"
                         mount $disk"3" /mnt
-                        mount --mkdir $disk"1" /mnt/boot
+                        mount $disk"1" /mnt/boot
                         pacstrap -K /mnt base linux linux-firmware nano dhcpcd syslinux 
                         genfstab -U /mnt >> /mnt/etc/fstab
                         export -f chrootenv
