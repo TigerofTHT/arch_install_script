@@ -52,8 +52,8 @@ do
                         mkfs.ext4 $disk"3"
                         swapon $disk"2"
                         mount $disk"3" /mnt
-                        mount $disk"1" /mnt/boot
                         pacstrap -K /mnt base linux linux-firmware nano dhcpcd syslinux 
+                        mount $disk"1" /mnt/boot
                         genfstab -U /mnt >> /mnt/etc/fstab
                         export -f chrootenv
                         arch-chroot /mnt /bin/bash -c chrootenv
