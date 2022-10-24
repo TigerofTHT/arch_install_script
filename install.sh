@@ -20,8 +20,14 @@ chrootenv() {
         systemctl enable dhcpcd
         passwd
         #syslinux-install_update -i -a -m
-        mbr
-}
+        boot=$(blkid | grep $disk"1" | cut -b 52-55) 
+        if [ "$boot" != "vfat" ]
+                then
+                        mbr
+                else
+                        uefi
+        fi
+}                      
 
 mbr() {
         syslinux-install_update -i -a -m        
@@ -48,7 +54,7 @@ do
                         mkfs.ext4 $disk"2"
                         swapon $disk"1"
                         mount $disk"2" /mnt
-                        pacstrap -K /mnt base linux linux-firmware nano dhcpcd syslinux 
+                        pacstrap -K /mnt base linux linux-firmware nano dhcpcd syslinux                                       efibootmgr
                         genfstab -U /mnt >> /mnt/etc/fstab
                         export -f chrootenv mbr
                         arch-chroot /mnt /bin/bash -c chrootenv mbr
@@ -65,7 +71,8 @@ do
                         swapon $disk"2"
                         mount $disk"3" /mnt
                         mount -m $disk"1" /mnt/boot
-                        pacstrap -K /mnt base linux linux-firmware nano dhcpcd syslinux 
+                        pacstrap -K /mnt base linux linux-firmware nano dhcpcd syslinux \ 
+                                        efibootmgr 
                         genfstab -U /mnt >> /mnt/etc/fstab
                         export -f chrootenv uefi
                         arch-chroot /mnt /bin/bash -c chrootenv uefi
