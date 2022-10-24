@@ -51,7 +51,7 @@ do
                         pacstrap -K /mnt base linux linux-firmware nano dhcpcd syslinux 
                         genfstab -U /mnt >> /mnt/etc/fstab
                         export -f chrootenv mbr
-                        arch-chroot /mnt /bin/bash -c chrootenv
+                        arch-chroot /mnt /bin/bash -c chrootenv mbr
                         ;;
                 
                 u)      echo -e "\nPreparing disk with UEFI...\n"
@@ -68,7 +68,7 @@ do
                         pacstrap -K /mnt base linux linux-firmware nano dhcpcd syslinux 
                         genfstab -U /mnt >> /mnt/etc/fstab
                         export -f chrootenv uefi
-                        arch-chroot /mnt /bin/bash -c chrootenv
+                        arch-chroot /mnt /bin/bash -c chrootenv uefi
                         ;;
         esac 
 done
