@@ -19,8 +19,20 @@ chrootenv() {
         mkinitcpio -P
         systemctl enable dhcpcd
         passwd
-        syslinux-install_update -i -a -m
+        #syslinux-install_update -i -a -m
+        mbr
 }
+
+mbr() {
+        syslinux-install_update -i -a -m        
+}
+
+uefi(){
+        mkdir -p esp/EFI/syslinux
+        cp -r /usr/lib/syslinux/efi64/* esp/EFI/syslinux
+        efibootmgr --create --disk $disk --part Y --loader /EFI/syslinux/syslinux.efi --label "Syslinux" --unicode
+}
+
 
 timedatectl status
 
@@ -38,7 +50,7 @@ do
                         mount $disk"2" /mnt
                         pacstrap -K /mnt base linux linux-firmware nano dhcpcd syslinux 
                         genfstab -U /mnt >> /mnt/etc/fstab
-                        export -f chrootenv
+                        export -f chrootenv mbr
                         arch-chroot /mnt /bin/bash -c chrootenv
                         ;;
                 
@@ -52,10 +64,10 @@ do
                         mkfs.ext4 $disk"3"
                         swapon $disk"2"
                         mount $disk"3" /mnt
+                        mount -m $disk"1" /mnt/boot
                         pacstrap -K /mnt base linux linux-firmware nano dhcpcd syslinux 
-                        mount $disk"1" /mnt/boot
                         genfstab -U /mnt >> /mnt/etc/fstab
-                        export -f chrootenv
+                        export -f chrootenv uefi
                         arch-chroot /mnt /bin/bash -c chrootenv
                         ;;
         esac 
