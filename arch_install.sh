@@ -19,7 +19,15 @@ chrootenv() {
         mkinitcpio -P
         systemctl enable dhcpcd
         passwd
-        syslinux-install_update -i -a -m
+        #syslinux-install_update -i -a -m
+        if [ ! -d /sys/firmware/efi ]
+        then
+                grub-install --target=i386-pc $disk
+                grub-mkconfig -o /boot/grub/grub.cfg
+        else        
+                grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+                grub-mkconfig -o /boot/grub/grub.cfg
+        fi
 }                      
 
 timedatectl status
@@ -37,6 +45,7 @@ do
                         mount $disk"2" /mnt
                         pacstrap -K /mnt base linux linux-firmware nano dhcpcd syslinux
                         genfstab -U /mnt >> /mnt/etc/fstab
+                        export disk
                         export -f chrootenv
                         arch-chroot /mnt /bin/bash -c chrootenv
                         ;;
@@ -55,6 +64,7 @@ do
                         pacstrap -K /mnt base linux linux-firmware nano dhcpcd syslinux \
                                         efibootmgr 
                         genfstab -U /mnt >> /mnt/etc/fstab
+                        export disk
                         export -f chrootenv
                         arch-chroot /mnt /bin/bash -c chrootenv
                         ;;
