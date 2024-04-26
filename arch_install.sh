@@ -5,7 +5,7 @@ set -e
 disk="/dev/sda"
 
 chrootenv() {
-        echo -e "\n\e[1:37mPreparing chroot enviroment...\e[0m\n"
+        echo -e "\n\e[1;37mPreparing chroot enviroment...\e[0m\n"
         echo "Setup time zone..."
         ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
         hwclock --systohc
@@ -27,7 +27,7 @@ timedatectl status
 while getopts "mu" opt
 do
         case $opt in 
-                m)      echo -e "\n\e[1:37mPreparing disk with MBR...\e[0m\n"
+                m)      echo -e "\n\e[1;37mPreparing disk with MBR...\e[0m\n"
                         parted -s -a optimal $disk mklabel msdos \
                                         mkpart primary linux-swap 0% 4G \
                                         mkpart primary ext4 4G 100% print
@@ -37,11 +37,11 @@ do
                         mount $disk"2" /mnt
                         pacstrap -K /mnt base linux linux-firmware nano dhcpcd syslinux
                         genfstab -U /mnt >> /mnt/etc/fstab
-                        export -f chrootenv mbr
+                        export -f chrootenv
                         arch-chroot /mnt /bin/bash -c chrootenv
                         ;;
                 
-                u)      echo -e "\n\e[1:37mPreparing disk with UEFI...\e[0m\n"
+                u)      echo -e "\n\e[1;37mPreparing disk with UEFI...\e[0m\n"
                         parted -s -a optimal $disk mklabel gpt \
                                         mkpart primary fat32 0% 1G \
                                         mkpart primary linux-swap 1G 4G \
