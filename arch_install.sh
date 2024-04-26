@@ -43,7 +43,7 @@ do
                         mkfs.ext4 $disk"2"
                         swapon $disk"1"
                         mount $disk"2" /mnt
-                        pacstrap -K /mnt base linux linux-firmware nano dhcpcd syslinux
+                        pacstrap -K /mnt base linux linux-firmware nano dhcpcd grub
                         genfstab -U /mnt >> /mnt/etc/fstab
                         export disk
                         export -f chrootenv
@@ -61,7 +61,7 @@ do
                         swapon $disk"2"
                         mount $disk"3" /mnt
                         mount -m $disk"1" /mnt/boot
-                        pacstrap -K /mnt base linux linux-firmware nano dhcpcd syslinux \
+                        pacstrap -K /mnt base linux linux-firmware nano dhcpcd grub \
                                         efibootmgr 
                         genfstab -U /mnt >> /mnt/etc/fstab
                         export disk
